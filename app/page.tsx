@@ -15,18 +15,29 @@ export default function Home() {
   // };
 
   const signIn = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        queryParams: {
-          access_type: "offline",
-          prompt: "consent",
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          queryParams: {
+            access_type: "offline",
+            prompt: "consent",
+          },
         },
-      },
-    });
-    console.log("data = ", data);
-    console.log("error = ", error);
+      });
+      console.log("data = ", data);
+    } catch (e) {
+      console.log("error = ", e);
+    }
   };
+
+  async function handleSignInWithGoogle(response) {
+    const { data, error } = await supabase.auth.signInWithIdToken({
+      provider: 'google',
+      token: response.credential,
+    })
+  }
+  
 
   return (
     <main className="p-24">
